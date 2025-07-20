@@ -1,0 +1,3 @@
+C:/Users/Diegoo/CLionProjects/herencia del mago/cmake-build-debug/CMakeFiles/herencia_del_mago.dir
+C:/Users/Diegoo/CLionProjects/herencia del mago/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Diegoo/CLionProjects/herencia del mago/cmake-build-debug/CMakeFiles/rebuild_cache.dir
