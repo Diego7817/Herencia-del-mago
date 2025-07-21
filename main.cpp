@@ -1,25 +1,43 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <map>
+#include "Wizard.h"
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the
-    // <b>lang</b> variable name to see how CLion can help you rename it.
-    auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+std::map<int, Wizard*> readCSV(const std::string& filename) {
+    std::map<int, Wizard*> wizards;
+    std::ifstream file(filename);
+    std::string line;
+    getline(file, line); // skip header
 
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code.
-        // We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/>
-        // breakpoint for you, but you can always add more by pressing
-        // <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string token;
+        std::vector<std::string> fields;
+
+        while (getline(ss, token, ',')) {
+            fields.push_back(token);
+        }
+
+        int id = std::stoi(fields[0]);
+        std::string name = fields[1];
+        std::string last_name = fields[2];
+        char gender = fields[3][0];
+        int age = std::stoi(fields[4]);
+        int id_father = std::stoi(fields[5]);
+        bool is_dead = fields[6] == "1";
+        std::string type_magic = fields[7];
+        bool is_owner = fields[8] == "1";
+
+        wizards[id] = new Wizard(id, name, last_name, gender, age, id_father, is_dead, type_magic, is_owner);
     }
 
-    return 0;
-}
+    // Link children to their fathers
+    for (auto& [id, wizard] : wizards) {
+        if (wizard->id_father != 0 && wizards.count(wizard->id_father)) {
+            wizards[wizard->id_father]->children.push_back(wizard);
+        }
+    }
 
-// TIP See CLion help at <a
-// href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>.
-//  Also, you can try interactive lessons for CLion by selecting
-//  'Help | Learn IDE Features' from the main menu.
+    return wizards;
+}
